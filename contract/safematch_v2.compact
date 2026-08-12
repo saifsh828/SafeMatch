@@ -1,0 +1,189 @@
+// SafeMatch.compact
+// Private identity verification contract for dating/social apps (Midnight Network)
+//
+// Goal: user proves "age in range" and/or "verified real person" to an app
+// without revealing date of birth, name, document, or any raw identity data.
+//
+// Deliberately narrow MVP: issuer management, credential issue/revoke, and proofs.
+// Smaller circuit set keeps preprod deployment within block resource limits.
+
+pragma language_version 0.23;
+
+import CompactStandardLibrary;
+
+// ============================================================
+// Public ledger state (visible on-chain)
+// ============================================================
+
+// Hash commitment to owner authorization secret. Secret never reaches ledger.
+export ledger owner: Bytes<32>;
+
+// Providers allowed to issue commitments.
+export ledger trustedProviders: Set<Bytes<32>>;
+
+// Hash commitments that authorize each provider to issue/revoke credentials.
+export ledger providerAuthorizations: Set<Bytes<32>>;
+
+// Commitments issued by trusted providers.
+// commitment = hash(secretId, dob, salt, providerId)
+export ledger issuedCommitments: Set<Bytes<32>>;
+
+// Nullifiers: stop one credential from being used to make
+// more than one profile on the same app.
+export ledger usedNullifiers: Set<Bytes<32>>;
+
+// ============================================================
+// Private witness inputs (never revealed on-chain)
+// ============================================================
+
+witness secretId(): Bytes<32>;      // user's private identity secret
+witness dob(): Uint<32>;            // date of birth as YYYYMMDD
+witness salt(): Bytes<32>;          // random salt chosen at issuance
+witness providerId(): Bytes<32>;    // provider that issued the credential
+witness ownerSecret(): Bytes<32>;   // held only by registry operator
+witness providerSecret(): Bytes<32>; // held only by credential issuer
+
+// ============================================================
+// Internal helpers
+// ============================================================
+
+circuit commitmentOf(): Bytes<32> {
+  return persistentHash<Vector<4, Bytes<32>>>(
+    [secretId(), dob() as Bytes<32>, salt(), providerId()]
+  );
+}
+
+circuit nullifierFor(appId: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>([secretId(), appId]);
+}
+
+circuit ownerAuthorization(): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>([
+    pad(32, "safematch:owner:v1"), ownerSecret()
+  ]);
+}
+
+circuit providerAuthorization(providerKey: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<3, Bytes<32>>>([
+    pad(32, "safematch:provider:v1"), providerKey, providerSecret()
+  ]);
+}
+
+circuit assertOwner(): [] {
+  assert(owner == ownerAuthorization(), "only registry owner may perform this action");
+}
+
+circuit assertProvider(providerKey: Bytes<32>): [] {
+  assert(trustedProviders.member(disclose(providerKey)), "provider not trusted");
+  assert(providerAuthorizations.member(disclose(providerAuthorization(providerKey))), "provider authorization failed");
+}
+
+constructor() {
+  owner = disclose(ownerAuthorization());
+}
+
+// ============================================================
+// PROVIDERS — register / remove
+// ============================================================
+
+// Create: owner adds a trusted credential-issuing provider.
+export circuit addProvider(providerKey: Bytes<32>, authorization: Bytes<32>): [] {
+  assertOwner();
+  assert(!trustedProviders.member(disclose(providerKey)), "provider already trusted");
+  assert(authorization != default<Bytes<32>>, "provider authorization cannot be empty");
+  trustedProviders.insert(disclose(providerKey));
+  providerAuthorizations.insert(disclose(authorization));
+}
+
+// Owner removes a trusted provider (e.g. decommissioned).
+export circuit removeProvider(providerKey: Bytes<32>): [] {
+  assertOwner();
+  assert(trustedProviders.member(disclose(providerKey)), "provider not found");
+  trustedProviders.remove(disclose(providerKey));
+}
+
+// ============================================================
+// CREDENTIALS (commitments) — issue / revoke
+// ============================================================
+
+// Create: provider issues a new credential commitment after
+// completing off-chain identity + age verification.
+export circuit issueCredential(
+  commitment: Bytes<32>,
+  providerKey: Bytes<32>
+): [] {
+  assertProvider(providerKey);
+  assert(!issuedCommitments.member(disclose(commitment)), "commitment already issued");
+  issuedCommitments.insert(disclose(commitment));
+}
+
+// Provider revokes a credential (e.g. fraud discovered later).
+export circuit revokeCredential(
+  commitment: Bytes<32>,
+  providerKey: Bytes<32>
+): [] {
+  assertProvider(providerKey);
+  assert(issuedCommitments.member(disclose(commitment)), "commitment not found");
+  issuedCommitments.remove(disclose(commitment));
+}
+
+// Note: nullifiers are created only as a side effect of the proof
+// circuits below (proveAgeInRange / proveVerifiedPerson / proveAgeAndVerified).
+// They are intentionally never updatable or deletable — that immutability
+// is what stops replay / duplicate-profile abuse.
+
+// ============================================================
+// PROOF CIRCUITS — user-facing selective disclosure
+// ============================================================
+
+// Prove age is within [minAge, maxAge] as of currentDate, for a given app,
+// without revealing dob. Creates a nullifier so this credential cannot
+// be reused to create a second profile on the same app.
+export circuit proveAgeInRange(
+  minAge: Uint<32>,
+  maxAge: Uint<32>,
+  currentDate: Uint<32>,
+  appId: Bytes<32>
+): [] {
+  const commitment = disclose(commitmentOf());
+  assert(issuedCommitments.member(commitment), "credential not found");
+  assert(trustedProviders.member(disclose(providerId())), "credential issuer not trusted");
+
+  assert(disclose(dob()) <= currentDate - minAge * 10000, "below minimum age");
+  assert(disclose(dob()) >= currentDate - (maxAge + 1) * 10000, "above maximum age");
+
+  const nullifier = disclose(nullifierFor(appId));
+  assert(!usedNullifiers.member(nullifier), "credential already used on this app");
+  usedNullifiers.insert(nullifier);
+}
+
+// Prove "real verified person" only, no age claim, for a given app.
+export circuit proveVerifiedPerson(appId: Bytes<32>): [] {
+  const commitment = disclose(commitmentOf());
+  assert(issuedCommitments.member(commitment), "credential not found");
+  assert(trustedProviders.member(disclose(providerId())), "credential issuer not trusted");
+
+  const nullifier = disclose(nullifierFor(appId));
+  assert(!usedNullifiers.member(nullifier), "credential already used on this app");
+  usedNullifiers.insert(nullifier);
+}
+
+// Prove both age range and verified-person status in a single call,
+// so the app only needs one proof to onboard a user.
+export circuit proveAgeAndVerified(
+  minAge: Uint<32>,
+  maxAge: Uint<32>,
+  currentDate: Uint<32>,
+  appId: Bytes<32>
+): [] {
+  const commitment = disclose(commitmentOf());
+  assert(issuedCommitments.member(commitment), "credential not found");
+  assert(trustedProviders.member(disclose(providerId())), "credential issuer not trusted");
+
+  assert(disclose(dob()) <= currentDate - minAge * 10000, "below minimum age");
+  assert(disclose(dob()) >= currentDate - (maxAge + 1) * 10000, "above maximum age");
+
+  const nullifier = disclose(nullifierFor(appId));
+  assert(!usedNullifiers.member(nullifier), "credential already used on this app");
+  usedNullifiers.insert(nullifier);
+}
