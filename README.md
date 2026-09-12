@@ -10,7 +10,7 @@ SafeMatch is a Next.js MVP backed by a Midnight Compact smart contract. A truste
 | --- | --- |
 | Live preprod demo | [safe-match-eosin.vercel.app](https://safe-match-eosin.vercel.app/) |
 | MVP demo video | [Watch on Google Drive](https://drive.google.com/file/d/1RpfrZgKRLzs8_2AHg3c3QMnRCUA4WAbF/view?usp=sharing) |
-| Public GitHub repository | [rajnishd99/Safe-Match](https://github.com/rajnishd99/Safe-Match) |
+| Public GitHub repository | [saifsh828/SafeMatch](https://github.com/saifsh828/SafeMatch) |
 | Contract on Midnight preprod | [Open explorer](https://preprod.midnight.network/contract/8e0308828b5f5ce5ec629f75760dfdb25e7d7de06a65835d00c182fb18966fd7) |
 
 ## Screenshots
@@ -88,8 +88,8 @@ Not included:
 ## Local setup
 
 ```bash
-git clone https://github.com/rajnishd99/Safe-Match.git
-cd Safe-Match
+git clone https://github.com/saifsh828/SafeMatch.git
+cd SafeMatch
 npm install
 ```
 
@@ -213,7 +213,7 @@ If proof is disabled, wallet lacks credential witness state. Run synthetic issue
 
 ## CI/CD
 
-[![CI](https://github.com/rajnishd99/Safe-Match/actions/workflows/ci.yml/badge.svg)](https://github.com/rajnishd99/Safe-Match/actions/workflows/ci.yml)
+[![CI](https://github.com/saifsh828/SafeMatch/actions/workflows/ci.yml/badge.svg)](https://github.com/saifsh828/SafeMatch/actions/workflows/ci.yml)
 
 GitHub Actions runs dependency installation, ESLint, TypeScript checks, Compact `0.31.0` compilation, and proving-asset synchronization on pushes and pull requests.
 
