@@ -1,11 +1,12 @@
 {
-  "name": "safe-match-rajnish",
+  "name": "safe-match-saif",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
     "build": "npm run contract:compile && npm run contract:sync-assets && next build --webpack",
     "start": "next start",
+    "test": "node --test tests/*.test.mjs",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "contract:compile": "bash scripts/compile-contract.sh",
