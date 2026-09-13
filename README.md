@@ -12,10 +12,14 @@ SafeMatch is a Next.js MVP backed by a Midnight Compact smart contract. A truste
 | MVP demo video | [Watch on Google Drive](https://drive.google.com/file/d/1RpfrZgKRLzs8_2AHg3c3QMnRCUA4WAbF/view?usp=sharing) |
 | Public GitHub repository | [saifsh828/SafeMatch](https://github.com/saifsh828/SafeMatch) |
 | Contract on Midnight preprod | [Open explorer](https://preprod.midnight.network/contract/8e0308828b5f5ce5ec629f75760dfdb25e7d7de06a65835d00c182fb18966fd7) |
+| Level 4 submission evidence | [Open checklist](docs/LEVEL-4-SUBMISSION.md) |
+| Product X profile | **Pending account creation** |
+
+## Level 4 submission
+
+See [`docs/LEVEL-4-SUBMISSION.md`](docs/LEVEL-4-SUBMISSION.md) for requirement-by-requirement evidence, verification commands, and the one remaining external action: create and link SafeMatch product X profile.
 
 ## Screenshots
-
-Add screenshots to `docs/screenshots/` using filenames below. GitHub renders this section as a 2×2 gallery.
 
 <table>
   <tr>
@@ -24,18 +28,8 @@ Add screenshots to `docs/screenshots/` using filenames below. GitHub renders thi
       <br /><strong>Landing page</strong>
     </td>
     <td align="center" width="50%">
-      <img src="docs/screenshots/verification.png" alt="SafeMatch verification flow" width="100%" />
-      <br /><strong>Verification flow</strong>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="50%">
-      <img src="docs/screenshots/deploy.png" alt="SafeMatch contract deployment" width="100%" />
-      <br /><strong>Contract deployment</strong>
-    </td>
-    <td align="center" width="50%">
-      <img src="docs/screenshots/issuer.png" alt="SafeMatch issuer flow" width="100%" />
-      <br /><strong>Issuer flow</strong>
+      <img src="docs/screenshots/deploy.png" alt="SafeMatch deployment page" width="100%" />
+      <br /><strong>Preprod deployment</strong>
     </td>
   </tr>
 </table>
