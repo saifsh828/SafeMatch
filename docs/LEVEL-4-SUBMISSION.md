@@ -15,7 +15,7 @@ Requirement evidence for SafeMatch.
 - [x] CI badge: shown in README and links to GitHub Actions
 - [x] MVP demo video: [Google Drive recording](https://drive.google.com/file/d/1RpfrZgKRLzs8_2AHg3c3QMnRCUA4WAbF/view?usp=sharing)
 - [x] Meaningful commits: 25 commits on `main` (minimum: 15)
-- [ ] Product X profile: create profile, then replace pending entry in [`README.md`](../README.md) with its public URL
+- [x] Product X profile: [@0xsafematch](https://x.com/0xsafematch), linked in [`README.md`](../README.md)
 
 ## Local verification
 
@@ -31,10 +31,6 @@ npm run build
 
 ## Product X profile handoff
 
-Create public profile with product name, SafeMatch description, Preprod demo link, GitHub link, and demo video. After creation, update README Links table:
-
-```markdown
-| Product X profile | [@your-handle](https://x.com/your-handle) |
-```
+Profile: [@0xsafematch](https://x.com/0xsafematch). Keep product name, SafeMatch description, Preprod demo link, GitHub link, and demo video visible.
 
 Do not put wallet owner secrets, private witnesses, or real identity data in posts or repository files.

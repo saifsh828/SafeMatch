@@ -13,11 +13,11 @@ SafeMatch is a Next.js MVP backed by a Midnight Compact smart contract. A truste
 | Public GitHub repository | [saifsh828/SafeMatch](https://github.com/saifsh828/SafeMatch) |
 | Contract on Midnight preprod | [Open explorer](https://preprod.midnight.network/contract/8e0308828b5f5ce5ec629f75760dfdb25e7d7de06a65835d00c182fb18966fd7) |
 | Level 4 submission evidence | [Open checklist](docs/LEVEL-4-SUBMISSION.md) |
-| Product X profile | **Pending account creation** |
+| Product X profile | [@0xsafematch](https://x.com/0xsafematch) |
 
 ## Level 4 submission
 
-See [`docs/LEVEL-4-SUBMISSION.md`](docs/LEVEL-4-SUBMISSION.md) for requirement-by-requirement evidence, verification commands, and the one remaining external action: create and link SafeMatch product X profile.
+See [`docs/LEVEL-4-SUBMISSION.md`](docs/LEVEL-4-SUBMISSION.md) for requirement-by-requirement evidence and verification commands.
 
 ## Screenshots
 
