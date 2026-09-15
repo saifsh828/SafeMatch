@@ -4,6 +4,8 @@ Privacy-first identity and age verification for apps that need trust without col
 
 SafeMatch is a Next.js MVP backed by a Midnight Compact smart contract. A trusted issuer creates an on-chain commitment for a private credential. A holder then proves a narrow claim—age range, verified-person status, or both—through a zero-knowledge circuit. Date of birth, name, identity documents, and credential secrets stay private.
 
+Product profile on X: [@0xsafematch](https://x.com/0xsafematch). Profile bio describes SafeMatch's zero-knowledge identity verification product, and profile contains a public product post.
+
 ## Links
 
 | Resource | Link |
@@ -182,9 +184,13 @@ lib/
 scripts/
   compile-contract.sh      Compact compilation
   sync-contract-assets.sh  Browser proving-asset sync
+docs/
+  USAGE.md                 User-facing setup and demo walkthrough
 artifacts/                 Generated contract bindings and proving assets
 public/zk/                 Browser-served proving assets
 .github/workflows/         CI checks
+tests/
+  safematch.test.mjs       Contract behavior and privacy regression tests
 ```
 
 ## Commands
@@ -194,6 +200,7 @@ public/zk/                 Browser-served proving assets
 | `npm run dev` | Start Next.js development server |
 | `npm run lint` | Run ESLint |
 | `npm run typecheck` | Run TypeScript compiler without emitting files |
+| `npm test` | Run contract behavior and privacy regression tests |
 | `npm run build` | Compile contract, sync assets, and build Next.js app |
 | `npm run start` | Serve production build |
 | `npm run contract:compile` | Compile Compact contract |
@@ -209,7 +216,7 @@ If proof is disabled, wallet lacks credential witness state. Run synthetic issue
 
 [![CI](https://github.com/saifsh828/SafeMatch/actions/workflows/ci.yml/badge.svg)](https://github.com/saifsh828/SafeMatch/actions/workflows/ci.yml)
 
-GitHub Actions runs dependency installation, ESLint, TypeScript checks, Compact `0.31.0` compilation, and proving-asset synchronization on pushes and pull requests.
+GitHub Actions runs contract tests, dependency installation, ESLint, TypeScript checks, Compact `0.31.0` compilation, and proving-asset synchronization on pushes and pull requests. Contract tests run in their own `test` job.
 
 ## Contributing
 

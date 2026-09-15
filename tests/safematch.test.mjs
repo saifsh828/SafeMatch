@@ -41,7 +41,7 @@ class LedgerModel {
   }
 }
 
-test('circuit logic accepts age boundaries and rejects out-of-range DOB', () => {
+test('contract age circuit accepts boundaries and rejects out-of-range DOB', () => {
   const currentDate = 20260101;
   assert.match(contract, /disclose\(dob\(\)\) <= currentDate - minAge \* 10000/);
   assert.match(contract, /disclose\(dob\(\)\) >= currentDate - \(maxAge \+ 1\) \* 10000/);
@@ -50,7 +50,7 @@ test('circuit logic accepts age boundaries and rejects out-of-range DOB', () => 
   assert.equal(ageInRange(19890101, 25, 35, currentDate), false);
 });
 
-test('ledger transitions issue, consume once per app, and revoke credentials', () => {
+test('contract ledger transitions issue, consume once per app, and revoke credentials', () => {
   const ledger = new LedgerModel();
   ledger.addProvider('provider-1');
   ledger.issueCredential('commitment-1', 'provider-1');
@@ -61,7 +61,7 @@ test('ledger transitions issue, consume once per app, and revoke credentials', (
   assert.equal(ledger.credentials.has('commitment-1'), false);
 });
 
-test('private inputs stay witnesses and proof calls expose only policy inputs', () => {
+test('contract keeps identity inputs private and exposes only policy inputs', () => {
   assert.match(contract, /witness secretId\(\)/);
   assert.match(contract, /witness dob\(\)/);
   assert.match(contract, /witness salt\(\)/);
@@ -72,4 +72,18 @@ test('private inputs stay witnesses and proof calls expose only policy inputs', 
   assert.match(contract, /export circuit proveAgeInRange[\s\S]*\{[\s\S]*\n\}/);
   assert.doesNotMatch(proofClient, /args[^\n]*(?:secretId|dob|salt|providerId)/);
   assert.match(proofClient, /\[BigInt\(ageStart\), BigInt\(ageStart \+ 10\), currentDate, id\]/);
+});
+
+test('contract exposes all required MVP circuits', () => {
+  for (const circuit of [
+    'addProvider',
+    'removeProvider',
+    'issueCredential',
+    'revokeCredential',
+    'proveAgeInRange',
+    'proveVerifiedPerson',
+    'proveAgeAndVerified',
+  ]) {
+    assert.match(contract, new RegExp(`export circuit ${circuit}\\(`));
+  }
 });

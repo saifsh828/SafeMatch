@@ -8,10 +8,11 @@ Requirement evidence for SafeMatch.
 - [x] Working MVP live on Preprod: [safe-match-eosin.vercel.app](https://safe-match-eosin.vercel.app/)
 - [x] Midnight Preprod contract address: [`8e0308828b5f5ce5ec629f75760dfdb25e7d7de06a65835d00c182fb18966fd7`](https://preprod.midnight.network/contract/8e0308828b5f5ce5ec629f75760dfdb25e7d7de06a65835d00c182fb18966fd7)
 - [x] README documentation: setup, usage, architecture, contract map, troubleshooting, privacy boundary
+- [x] Dedicated usage guide: [`docs/USAGE.md`](USAGE.md)
 - [x] In-app technical docs: [`/docs`](https://safe-match-eosin.vercel.app/docs)
 - [x] Privacy documentation: [`/privacy`](https://safe-match-eosin.vercel.app/privacy)
 - [x] CI/CD workflow: [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
-- [x] CI checks: test, lint, typecheck, Compact compile, proving-asset sync ([latest passing run](https://github.com/saifsh828/SafeMatch/actions/runs/34558008621))
+- [x] CI checks: dedicated contract test job, lint, typecheck, Compact compile, proving-asset sync ([latest passing run](https://github.com/saifsh828/SafeMatch/actions/runs/34558008621))
 - [x] CI badge: shown in README and links to GitHub Actions
 - [x] MVP demo video: [Google Drive recording](https://drive.google.com/file/d/1RpfrZgKRLzs8_2AHg3c3QMnRCUA4WAbF/view?usp=sharing)
 - [x] Meaningful commits: 25 commits on `main` (minimum: 15)
@@ -32,5 +33,7 @@ npm run build
 ## Product X profile handoff
 
 Profile: [@0xsafematch](https://x.com/0xsafematch). Keep product name, SafeMatch description, Preprod demo link, GitHub link, and demo video visible.
+
+Public product post: [SafeMatch MVP announcement](https://x.com/0xsafematch/status/2086466626132811843).
 
 Do not put wallet owner secrets, private witnesses, or real identity data in posts or repository files.
