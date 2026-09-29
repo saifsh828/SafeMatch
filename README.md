@@ -6,6 +6,10 @@ SafeMatch is a Next.js MVP backed by a Midnight Compact smart contract. A truste
 
 Product profile on X: [@0xsafematch](https://x.com/0xsafematch). Profile bio describes SafeMatch's zero-knowledge identity verification product, and profile contains a public product post.
 
+## Live Demo
+
+[Open SafeMatch on Midnight preprod](https://safe-match-eosin.vercel.app/)
+
 ## Links
 
 | Resource | Link |
@@ -16,6 +20,9 @@ Product profile on X: [@0xsafematch](https://x.com/0xsafematch). Profile bio des
 | Contract on Midnight preprod | [Open explorer](https://preprod.midnight.network/contract/8e0308828b5f5ce5ec629f75760dfdb25e7d7de06a65835d00c182fb18966fd7) |
 | Level 4 submission evidence | [Open checklist](docs/LEVEL-4-SUBMISSION.md) |
 | Product X profile | [@0xsafematch](https://x.com/0xsafematch) |
+| User feedback form | [Open Google Form](https://forms.gle/EN3ZuNWG33MNyqER9) |
+| Feedback response sheet | [Open reviewer evidence](https://docs.google.com/spreadsheets/d/1YHq1RN4AvBvMVHUdhl5xSjDveUDxo0BTzei13aU8FX4/edit?usp=sharing) |
+| Level 5/6 submission evidence | [Open checklist](docs/LEVEL-5-6-SUBMISSION.md) |
 
 ## Level 4 submission
 
@@ -36,15 +43,35 @@ See [`docs/LEVEL-4-SUBMISSION.md`](docs/LEVEL-4-SUBMISSION.md) for requirement-b
   </tr>
 </table>
 
-## Live preprod deployment
+## Contract Address
 
 Current SafeMatch V2 registry address:
+
+| Network | Address |
+| --- | --- |
+| Preprod | `8e0308828b5f5ce5ec629f75760dfdb25e7d7de06a65835d00c182fb18966fd7` |
 
 ```text
 8e0308828b5f5ce5ec629f75760dfdb25e7d7de06a65835d00c182fb18966fd7
 ```
 
 This is Midnight **preprod** software. Do not use real identity documents or production credentials.
+
+## What This Product Does
+
+SafeMatch gives dating, social, gaming, marketplace, and age-gated apps a narrow verification result without collecting raw identity data. Trusted issuers commit credentials on Midnight; holders decide whether to prove an age range, verified-person status, or both.
+
+Midnight makes issuer trust, credential status, and replay protection publicly verifiable while keeping exact DOB, names, documents, and credential secrets in private witness state. Current build is a preprod MVP using synthetic issuer data, not a production identity service.
+
+## Privacy Model
+
+- **PUBLIC:** credential commitments, trusted provider state, selected policy inputs, app-specific nullifiers, and transaction result.
+- **PRIVATE:** `secretId`, exact DOB, salt, provider secret, owner secret, name, and identity documents.
+- **PROVED WITHOUT REVEALING:** holder owns an active trusted credential and satisfies selected age/verified-person policy.
+
+## Tech Stack
+
+Next.js 16, React 19, TypeScript, Midnight Compact, Midnight.js, 1AM connector, Framer Motion, Node.js 22, and GitHub Actions.
 
 ## Product flow
 
@@ -73,7 +100,7 @@ Not included:
 - Production security, legal, compliance, or identity-provider review.
 - Real identity verification. `/issuer` creates synthetic demo values only.
 
-## Requirements
+## Prerequisites
 
 - Node.js 22 or newer
 - npm
@@ -81,7 +108,7 @@ Not included:
 - 1AM browser extension configured for Midnight preprod
 - 1AM ProofStation / fee sponsorship for preprod transactions
 
-## Local setup
+## Setup & Run Locally
 
 ```bash
 git clone https://github.com/saifsh828/SafeMatch.git
@@ -205,6 +232,54 @@ tests/
 | `npm run start` | Serve production build |
 | `npm run contract:compile` | Compile Compact contract |
 | `npm run contract:sync-assets` | Sync generated keys/ZKIR to `public/zk` |
+
+## Run Tests
+
+```bash
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+## Usage Guide
+
+See [`docs/USAGE.md`](docs/USAGE.md).
+
+## Level 5 — User Validation
+
+- Target: 50 preprod users
+- Current: **72 / 50** distinct valid wallet responses
+- Feedback form: [Google Form](https://forms.gle/EN3ZuNWG33MNyqER9)
+- Wallet evidence: [`USERS.md`](USERS.md)
+- Anonymized feedback log and themes: [`docs/FEEDBACK.md`](docs/FEEDBACK.md)
+- Outreach copy: [`docs/OUTREACH.md`](docs/OUTREACH.md)
+
+Names and email addresses remain outside repository. Response sheet is linked only as reviewer evidence and should retain least-privilege sharing.
+
+## Feedback & Iterations
+
+See [`docs/FEEDBACK.md`](docs/FEEDBACK.md).
+
+Top changes from 72 user responses:
+
+- Added Connect → Review → Prove progress guidance.
+- Added final public/private disclosure review before proof generation.
+- Added clearer success, retry, and next-step actions plus small-screen navigation cleanup.
+
+## Level 6 Users
+
+See [`LAUNCH_USERS.md`](LAUNCH_USERS.md). Launch cohort target reached: **20 / 20** verified preprod wallet responses.
+
+## Product X Profile
+
+[@0xsafematch](https://x.com/0xsafematch)
+
+## Brand Assets
+
+Brand brief, palette, messaging, X bio, banner concept, and onboarding script: [`docs/BRAND.md`](docs/BRAND.md).
+
+Final demo plan: [`docs/DEMO-CHECKLIST.md`](docs/DEMO-CHECKLIST.md).
 
 ## Troubleshooting
 

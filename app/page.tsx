@@ -7,16 +7,18 @@ import {
   Check,
   ChevronDown,
   Fingerprint,
+  ListChecks,
   KeyRound,
   LockKeyhole,
   ShieldCheck,
   Sparkles,
+  MessageSquareText,
   Unplug,
   Wallet,
   Zap,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { SAFEMATCH_CONTRACT_ADDRESS, SAFEMATCH_CONTRACT_STORAGE_KEY, isContractAddress } from "@/lib/constants";
+import { SAFEMATCH_CONTRACT_ADDRESS, SAFEMATCH_CONTRACT_STORAGE_KEY, SAFEMATCH_FEEDBACK_FORM_URL, isContractAddress } from "@/lib/constants";
 import { createConnectedSession, detectWallet, PREPROD_NETWORK_ID, type ConnectedSession } from "@/lib/midnight";
 import { credentialWitnessLoaded, proveSafeMatch } from "@/lib/prove-safematch-v2";
 
@@ -63,6 +65,7 @@ export default function Home() {
   const [contractAddress, setContractAddress] = useState(SAFEMATCH_CONTRACT_ADDRESS);
   const [credentialState, setCredentialState] = useState<"idle" | "checking" | "missing" | "ready">("idle");
   const [activities, setActivities] = useState<ProofActivity[]>([]);
+  const [reviewReady, setReviewReady] = useState(false);
 
   useEffect(() => {
     const storedAddress = window.localStorage.getItem(SAFEMATCH_CONTRACT_STORAGE_KEY);
@@ -95,6 +98,7 @@ export default function Home() {
       setProofState("idle");
       setCredentialState("idle");
       setProofError("");
+      setReviewReady(false);
       return;
     }
     setWalletState("connecting");
@@ -132,6 +136,15 @@ export default function Home() {
     }
   };
 
+  const reviewOrGenerate = () => {
+    if (!reviewReady) {
+      setReviewReady(true);
+      setProofState("idle");
+      return;
+    }
+    void generateProof();
+  };
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#07090d] text-[#f5f7f6] selection:bg-[#62e7cc]/30">
       <div className="ambient ambient-one" />
@@ -163,7 +176,7 @@ export default function Home() {
         >
           {walletState === "idle" && <><Wallet size={15} /> Connect wallet</>}
           {walletState === "connecting" && <><span className="spinner" /> Connecting</>}
-          {walletState === "connected" && <><Check size={15} /> 0x8F2...91A <Unplug size={13} className="ml-0.5 opacity-50" /></>}
+          {walletState === "connected" && <><Check size={15} /> {session?.unshieldedAddress ? `${session.unshieldedAddress.slice(0, 7)}…${session.unshieldedAddress.slice(-4)}` : "Connected"} <Unplug size={13} className="ml-0.5 opacity-50" /></>}
         </button>
       </nav>
 
@@ -203,6 +216,12 @@ export default function Home() {
           <p>Built on Midnight Network</p>
         </div>
 
+        <ol className="proof-steps" aria-label="Verification progress">
+          <li className={walletState === "connected" ? "complete" : "active"}><span>1</span><div><strong>Connect</strong><small>Use 1AM on preprod</small></div></li>
+          <li className={reviewReady ? "complete" : walletState === "connected" ? "active" : ""}><span>2</span><div><strong>Review</strong><small>See exact public claim</small></div></li>
+          <li className={proofState === "done" ? "complete" : reviewReady ? "active" : ""}><span>3</span><div><strong>Prove</strong><small>Confirm in wallet</small></div></li>
+        </ol>
+
         <div className="mt-8 grid gap-4 lg:grid-cols-[.82fr_1.18fr]">
           <motion.div className="glass-card credential-card" whileHover={{ y: -3 }} transition={{ duration: 0.2 }}>
             <div className="card-topline"><span>Credential status</span><ShieldCheck size={17} /></div>
@@ -234,7 +253,7 @@ export default function Home() {
             <div className="card-topline"><span>Generate proof</span><Sparkles size={17} /></div>
             <div className="mt-8 grid grid-cols-3 gap-2 rounded-2xl bg-black/25 p-1.5">
               {modes.map((item) => (
-                <button key={item.id} className={`mode-button ${mode === item.id ? "active" : ""}`} onClick={() => { setMode(item.id); setProofState("idle"); }}>
+                <button key={item.id} className={`mode-button ${mode === item.id ? "active" : ""}`} aria-pressed={mode === item.id} onClick={() => { setMode(item.id); setProofState("idle"); setReviewReady(false); }}>
                   <span className="hidden sm:inline">{item.label}</span><span className="sm:hidden">{item.short}</span>
                   {mode === item.id && <motion.span layoutId="mode-dot" className="mode-dot" />}
                 </button>
@@ -245,7 +264,7 @@ export default function Home() {
               {(mode === "age" || mode === "both") && (
                 <motion.div key="slider" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="slider-wrap">
                   <div className="flex items-end justify-between"><div><span className="field-label">Select age range</span><p className="mt-1 text-xs text-white/35">Exact age stays private</p></div><strong>{ageStart}–{ageStart + 10}</strong></div>
-                  <input aria-label="Age range start" type="range" min="18" max="45" value={ageStart} onChange={(e) => { setAgeStart(Number(e.target.value)); setProofState("idle"); }} style={{ "--range": `${((ageStart - 18) / 27) * 100}%` } as React.CSSProperties} />
+                  <input aria-label="Age range start" type="range" min="18" max="45" value={ageStart} onChange={(e) => { setAgeStart(Number(e.target.value)); setProofState("idle"); setReviewReady(false); }} style={{ "--range": `${((ageStart - 18) / 27) * 100}%` } as React.CSSProperties} />
                   <div className="flex justify-between font-mono text-[10px] text-white/25"><span>18</span><span>55+</span></div>
                 </motion.div>
               )}
@@ -256,28 +275,43 @@ export default function Home() {
               <span className="private-pill"><LockKeyhole size={11} /> Private</span>
             </div>
 
-            <button onClick={generateProof} disabled={walletState !== "connected" || credentialState !== "ready" || proofState === "generating"} className={`generate-button ${proofState}`}>
-              {proofState === "idle" && <>{walletState !== "connected" ? "Connect wallet to generate" : credentialState === "checking" ? "Checking credential…" : credentialState === "missing" ? "Credential required before proving" : "Generate zero-knowledge proof"}<ArrowRight size={16} /></>}
+            <AnimatePresence>
+              {reviewReady && (
+                <motion.div className="proof-review" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }} role="status">
+                  <div><ListChecks size={16} /><strong>Ready to confirm</strong></div>
+                  <p><span>Public:</span> {claim} and app-specific nullifier.</p>
+                  <p><span>Private:</span> Name, date of birth, documents, and credential secret.</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <button onClick={reviewOrGenerate} disabled={walletState !== "connected" || credentialState !== "ready" || proofState === "generating"} className={`generate-button ${proofState}`}>
+              {proofState === "idle" && <>{walletState !== "connected" ? "Connect wallet to continue" : credentialState === "checking" ? "Checking credential…" : credentialState === "missing" ? "Credential required before proving" : reviewReady ? "Confirm and generate proof" : "Review proof details"}<ArrowRight size={16} /></>}
               {proofState === "generating" && <><span className="proof-loader"><i /><i /><i /></span> Proving with 1AM on preprod…</>}
               {proofState === "done" && <><Check size={17} /> Proof submitted on-chain</>}
               {proofState === "error" && <>Proof failed — retry <ArrowRight size={16} /></>}
             </button>
-            {walletError && <p className="mt-4 text-sm text-red-300">{walletError}</p>}
-            {proofError && <p className="mt-4 text-sm text-red-300">{proofError}</p>}
+            {walletError && <p className="mt-4 text-sm text-red-300" role="alert">{walletError} Check wallet installation, unlock status, and preprod network, then retry.</p>}
+            {proofError && <p className="mt-4 text-sm text-red-300" role="alert">{proofError} Reconnect 1AM and retry with a fresh transaction.</p>}
             {walletState === "connected" && credentialState === "missing" && <p className="mt-4 text-sm text-white/42">A trusted issuer must provision your private credential first. <Link href="/docs" className="text-[#70ddc8] underline underline-offset-4">How it works</Link></p>}
           </div>
         </div>
 
         <AnimatePresence>
           {proofState === "done" && (
-            <motion.div className="result-card" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} transition={{ type: "spring", stiffness: 180, damping: 22 }}>
+            <motion.div className="result-card" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} transition={{ type: "spring", stiffness: 180, damping: 22 }} role="status" aria-live="polite">
               <div className="confetti"><i /><i /><i /><i /><i /><i /></div>
               <div className="result-check"><Check size={18} /></div>
-              <div className="min-w-0 flex-1"><span>Confirmed by Midnight preprod</span><h3>{claim}</h3><p>Transaction ID: {transactionId}</p></div>
-              <a className="copy-button" href={`https://preprod.midnight.network/contract/${contractAddress}`} target="_blank" rel="noreferrer">View contract</a>
+              <div className="min-w-0 flex-1"><span>Confirmed by Midnight preprod</span><h3>{claim}</h3><p>Transaction ID: {transactionId}</p><p>Your private credential stayed in wallet. Next: share feedback or inspect contract.</p></div>
+              <div className="result-actions"><a className="copy-button" href={`https://preprod.midnight.network/contract/${contractAddress}`} target="_blank" rel="noreferrer">View contract</a><a className="copy-button feedback" href={SAFEMATCH_FEEDBACK_FORM_URL} target="_blank" rel="noreferrer">Share feedback</a></div>
             </motion.div>
           )}
         </AnimatePresence>
+      </section>
+
+      <section className="feedback-band" aria-labelledby="feedback-heading">
+        <div><span className="section-kicker">Help shape launch</span><h2 id="feedback-heading">Tried SafeMatch? Tell us what felt unclear.</h2><p>Two-minute form. Never enter identity documents, private keys, credential secrets, or seed phrases.</p></div>
+        <a href={SAFEMATCH_FEEDBACK_FORM_URL} target="_blank" rel="noreferrer"><MessageSquareText size={17} /> Open feedback form <ArrowRight size={16} /></a>
       </section>
 
       <section id="connections" className="relative z-10 border-t border-white/[0.06] bg-black/15">
@@ -301,7 +335,7 @@ export default function Home() {
 
       <footer className="relative z-10 mx-auto flex max-w-[1200px] flex-col gap-4 px-5 py-8 text-xs text-white/30 md:flex-row md:items-center md:justify-between md:px-8">
         <div className="flex items-center gap-2"><BrandMark small /><span>SafeMatch</span><span>· Private identity for real connection.</span></div>
-        <div className="flex gap-5"><Link href="/privacy">Privacy</Link><Link href="/docs">Docs</Link><a href={`https://preprod.midnight.network/contract/${contractAddress}`} target="_blank" rel="noreferrer">Midnight contract</a></div>
+        <div className="flex flex-wrap gap-5"><Link href="/privacy">Privacy</Link><Link href="/docs">Docs</Link><a href={SAFEMATCH_FEEDBACK_FORM_URL} target="_blank" rel="noreferrer">Feedback</a><a href={`https://preprod.midnight.network/contract/${contractAddress}`} target="_blank" rel="noreferrer">Midnight contract</a></div>
       </footer>
     </main>
   );

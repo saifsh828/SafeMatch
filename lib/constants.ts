@@ -7,6 +7,10 @@ export const SAFEMATCH_CONTRACT_ADDRESS =
 // Versioned key prevents an older incompatible deployment from overriding this one.
 export const SAFEMATCH_CONTRACT_STORAGE_KEY = 'safematch:preprod-contract-address:v2';
 
+export const SAFEMATCH_FEEDBACK_FORM_URL = 'https://forms.gle/EN3ZuNWG33MNyqER9';
+export const SAFEMATCH_FEEDBACK_SHEET_URL =
+  'https://docs.google.com/spreadsheets/d/1YHq1RN4AvBvMVHUdhl5xSjDveUDxo0BTzei13aU8FX4/edit?usp=sharing';
+
 export function isContractAddress(value: string): boolean {
   return /^[0-9a-f]{64}$/i.test(value);
 }
