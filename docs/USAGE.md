@@ -35,7 +35,7 @@ A fresh wallet needs a credential witness. Use issuer smoke testing first, or us
 
 ## Synthetic issuer smoke test
 
-1. Open `/deploy` and deploy a registry, or use the [current preprod registry](https://preprod.midnight.network/contract/8e0308828b5f5ce5ec629f75760dfdb25e7d7de06a65835d00c182fb18966fd7).
+1. Open `/deploy` and deploy a registry, or use the [current preprod registry](https://preprod.midnight.network/contract/66c7703f9e112a91e66095ddf83aff50ba419388994f94d99e451e3b1e41a98e).
 2. Save the owner authorization secret offline; it is shown once.
 3. Open `/issuer`, paste owner secret, and enter synthetic DOB `20000101`.
 4. Approve provider registration and credential issuance in 1AM.

@@ -6,7 +6,7 @@ Requirement evidence for SafeMatch.
 
 - [x] Public GitHub repository: [saifsh828/SafeMatch](https://github.com/saifsh828/SafeMatch)
 - [x] Working MVP live on Preprod: [safe-match-eosin.vercel.app](https://safe-match-eosin.vercel.app/)
-- [x] Midnight Preprod contract address: [`8e0308828b5f5ce5ec629f75760dfdb25e7d7de06a65835d00c182fb18966fd7`](https://preprod.midnight.network/contract/8e0308828b5f5ce5ec629f75760dfdb25e7d7de06a65835d00c182fb18966fd7)
+- [x] Midnight Preprod contract address: [`66c7703f9e112a91e66095ddf83aff50ba419388994f94d99e451e3b1e41a98e`](https://preprod.midnight.network/contract/66c7703f9e112a91e66095ddf83aff50ba419388994f94d99e451e3b1e41a98e)
 - [x] README documentation: setup, usage, architecture, contract map, troubleshooting, privacy boundary
 - [x] Dedicated usage guide: [`docs/USAGE.md`](USAGE.md)
 - [x] In-app technical docs: [`/docs`](https://safe-match-eosin.vercel.app/docs)

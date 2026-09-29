@@ -17,7 +17,8 @@ Product profile on X: [@0xsafematch](https://x.com/0xsafematch). Profile bio des
 | Live preprod demo | [safe-match-eosin.vercel.app](https://safe-match-eosin.vercel.app/) |
 | MVP demo video | [Watch on Google Drive](https://drive.google.com/file/d/1RpfrZgKRLzs8_2AHg3c3QMnRCUA4WAbF/view?usp=sharing) |
 | Public GitHub repository | [saifsh828/SafeMatch](https://github.com/saifsh828/SafeMatch) |
-| Contract on Midnight preprod | [Open explorer](https://preprod.midnight.network/contract/8e0308828b5f5ce5ec629f75760dfdb25e7d7de06a65835d00c182fb18966fd7) |
+| Contract on Midnight preprod | [Open explorer](https://preprod.midnight.network/contract/66c7703f9e112a91e66095ddf83aff50ba419388994f94d99e451e3b1e41a98e) |
+| Deployment transaction | [Block 2,763,133](https://preprod.midnightexplorer.com/transactions/9cb81fb3ec342b011fcee67ceadea728ed21a8d3057b6416593568b536203239) |
 | Level 4 submission evidence | [Open checklist](docs/LEVEL-4-SUBMISSION.md) |
 | Product X profile | [@0xsafematch](https://x.com/0xsafematch) |
 | User feedback form | [Open Google Form](https://forms.gle/EN3ZuNWG33MNyqER9) |
@@ -49,10 +50,10 @@ Current SafeMatch V2 registry address:
 
 | Network | Address |
 | --- | --- |
-| Preprod | `8e0308828b5f5ce5ec629f75760dfdb25e7d7de06a65835d00c182fb18966fd7` |
+| Preprod | `66c7703f9e112a91e66095ddf83aff50ba419388994f94d99e451e3b1e41a98e` |
 
 ```text
-8e0308828b5f5ce5ec629f75760dfdb25e7d7de06a65835d00c182fb18966fd7
+66c7703f9e112a91e66095ddf83aff50ba419388994f94d99e451e3b1e41a98e
 ```
 
 This is Midnight **preprod** software. Do not use real identity documents or production credentials.

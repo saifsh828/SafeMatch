@@ -17,8 +17,8 @@
 - [x] `LAUNCH_USERS.md` contains 20 verified preprod wallets; target reached.
 - [x] Brand brief and onboarding message exist in `docs/BRAND.md`.
 - [x] Final demo checklist exists in `docs/DEMO-CHECKLIST.md`.
-- [x] Existing preprod contract address is used by frontend and README.
-- [x] Contract deployment requirement satisfied; Compact source and active preprod address remain unchanged.
+- [x] Newly redeployed preprod contract address is used by frontend and README.
+- [x] SafeMatch V2 redeployed and finalized on preprod at block `2763133`.
 - [x] Updated frontend deployment documented with confirmed live URL.
 - [x] Final demo video requirement completed and linked in README.
 - [x] Commit and Rise In submission requirement completed.
@@ -28,4 +28,5 @@
 - Feedback form: https://forms.gle/EN3ZuNWG33MNyqER9
 - Response sheet: https://docs.google.com/spreadsheets/d/1YHq1RN4AvBvMVHUdhl5xSjDveUDxo0BTzei13aU8FX4/edit?usp=sharing
 - Live demo: https://safe-match-eosin.vercel.app/
-- Contract: https://preprod.midnight.network/contract/8e0308828b5f5ce5ec629f75760dfdb25e7d7de06a65835d00c182fb18966fd7
+- Contract: https://preprod.midnight.network/contract/66c7703f9e112a91e66095ddf83aff50ba419388994f94d99e451e3b1e41a98e
+- Deployment transaction: https://preprod.midnightexplorer.com/transactions/9cb81fb3ec342b011fcee67ceadea728ed21a8d3057b6416593568b536203239

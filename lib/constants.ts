@@ -1,4 +1,4 @@
-const fallbackContractAddress = '8e0308828b5f5ce5ec629f75760dfdb25e7d7de06a65835d00c182fb18966fd7';
+const fallbackContractAddress = '66c7703f9e112a91e66095ddf83aff50ba419388994f94d99e451e3b1e41a98e';
 
 // Public address is configurable at build time; owner secret must never enter client code.
 export const SAFEMATCH_CONTRACT_ADDRESS =
